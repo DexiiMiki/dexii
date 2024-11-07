@@ -1,0 +1,475 @@
+if game.Workspace:FindFirstChild("SuperSecretAssets") then
+	Folder = game.Workspace:FindFirstChild("SuperSecretAssets")
+	if Folder:FindFirstChild("Blart") then
+		Folder:FindFirstChild("Blart"):Destroy()
+	end
+else
+	Folder = Instance.new("Folder", game:GetService("Workspace"))
+end
+Folder.Name = "SuperSecretAssets"
+local Part = Instance.new("Part", Folder)
+Part.Name = "Blart"
+player = game.Players.LocalPlayer
+character = player.Character
+page = 1
+local enabled = false
+local Attachment1 = Instance.new("Attachment", Part)
+local function ForcePart(v)
+	if v:IsA("Part") and v.Anchored == false and v.Parent:FindFirstChild("Humanoid") == nil and v.Parent:FindFirstChild("Head") == nil and v.Name ~= "Handle" then
+		game.Players.LocalPlayer:GetMouse().TargetFilter = v
+		for _, x in next, v:GetChildren() do
+			if x:IsA("BodyAngularVelocity") or x:IsA("BodyForce") or x:IsA("BodyGyro") or x:IsA("BodyPosition") or x:IsA("BodyThrust") or x:IsA("BodyVelocity") or x:IsA("RocketPropulsion") then
+				x:Destroy()
+			end
+		end
+		if v:FindFirstChild("Attachment") then
+			v:FindFirstChild("Attachment"):Destroy()
+		end
+		if v:FindFirstChild("AlignPosition") then
+			v:FindFirstChild("AlignPosition"):Destroy()
+		end
+		if v:FindFirstChild("Torque") then
+			v:FindFirstChild("Torque"):Destroy()
+		end
+		v.CanCollide = false
+		local Torque = Instance.new("Torque", v)
+		Torque.Torque = Vector3.new(100000, 100000, 100000)
+		local AlignPosition = Instance.new("AlignPosition", v)
+		local Attachment2 = Instance.new("Attachment", v)
+		Torque.Attachment0 = Attachment2
+		AlignPosition.MaxForce = 9999999999999999
+		AlignPosition.MaxVelocity = math.huge
+		AlignPosition.Responsiveness = 200
+		AlignPosition.Attachment0 = Attachment2 
+		AlignPosition.Attachment1 = Attachment1
+	end
+end
+function findNearestTorso(pos)
+	local list = game.Workspace:GetDescendants()
+	local torso = nil
+	local dist = 360
+	local temp = nil
+	local human = nil
+	local temp2 = nil
+	for x = 1, #list do
+		temp2 = list[x]
+		if (temp2.className == "Model") and (temp2 ~= character) then
+			human = temp2:FindFirstChildOfClass("Humanoid")
+			temp = temp2:FindFirstChild("Head")
+			if (temp ~= nil) and (human ~= nil) and (human.Health > 0) then
+				if (temp.Position - pos).magnitude < dist then
+					torso = temp
+					dist = (temp.Position - pos).magnitude
+				end
+			end
+		end
+	end
+	--print(torso)
+	return torso
+end
+rj = game.Players.LocalPlayer.Backpack:WaitForChild("RocketJumper")
+down = false
+down2 = false
+function lookAtPlayers(pos)
+	local part = Instance.new("Part")
+	local hl = Instance.new("Highlight")
+	hl.Parent = part
+	hl.Adornee = part
+	hl.FillTransparency = 1
+	hl.OutlineTransparency = 0
+	part.Size = Vector3.new(4, 4, 4)
+	part.Position = pos + Vector3.new(0,5,0) -- Set the initial position of the part
+	part.Anchored = true  -- Make sure the part is anchored
+	part.BrickColor = BrickColor.new("Bright blue")  -- Set the color of the part
+	part.Parent = Folder  -- Parent the part to the Workspace
+	while true do
+		wait(0.1)  -- Adjust the interval as needed
+		local character = findNearestTorso(part.Position)
+		if not part:IsDescendantOf(workspace) then break end
+		if character then
+			local head = character
+			if head then
+				local lookVector = (head.Position - part.Position).unit
+				part.CFrame = CFrame.new(part.Position, part.Position + lookVector)
+				rj.FireRocket:FireServer(head.Position,part.Position)
+			end
+		end
+	end
+end
+game.Players.LocalPlayer:GetMouse().KeyDown:Connect(function(k)
+	if k == "z"  and page == 1 then
+		print("grabbing")
+		for i,v in pairs(game.Workspace:GetChildren()) do
+			if v.Name == "Rocket" and v:IsA("BasePart") then
+				print("found")
+				Attachment1.WorldCFrame = game.Players.LocalPlayer:GetMouse().Hit
+				ForcePart(v)
+			end
+		end
+		if page == 2 then
+			local radius = 5
+			local numSegments = 10
+			local angleIncrement = math.pi / numSegments
+			for i = 0, numSegments do
+				local angle = i * angleIncrement
+				local x = character.HumanoidRootPart.Position.X + radius * math.cos(angle)
+				local z = character.HumanoidRootPart.Position.Z + radius * math.sin(angle)
+				local position = Vector3.new(x, character.HumanoidRootPart.Position.Y, z)
+				rj.FireRocket:FireServer(z+x,position)
+			end
+		end
+	end
+	if k == "x" then
+		print("grabbing")
+		for i,v in pairs(game.Workspace:GetChildren()) do
+			if v.Name == "Rocket" and v:IsA("BasePart") then
+				print("found")
+				Attachment1.WorldCFrame = v.CFrame
+				ForcePart(v)
+			end
+		end
+	end
+	if k == "c" then
+		down = true
+		if rj then
+			while down do
+				wait(0.1)
+				local targetPosition = game.Players.LocalPlayer:GetMouse().Hit.p
+				local spawnPosition = game.Players.LocalPlayer.Character.Head.Position + (game.Players.LocalPlayer.Character.Head.CFrame.lookVector * (game.Players.LocalPlayer.Character.Head.Size.Z / 2))
+				rj.FireRocket:FireServer(targetPosition,spawnPosition)
+			end
+		end
+	end
+	if k == "v" then
+		down2 = true
+		if rj then
+			while down2 do
+				wait(0.1)
+				local targetPosition = Vector3.new(0,-1000000000000,0)
+				local spawnPosition = game.Players.LocalPlayer:GetMouse().Hit.p
+				rj.FireRocket:FireServer(targetPosition,spawnPosition)
+			end
+		end
+	end
+	if k == "b" then
+		local spawnPosition = game.Players.LocalPlayer:GetMouse().Hit.p + Vector3.new(0,50,0)
+		for i = 1,30 do
+			local targetPosition = Vector3.new(0,-1000000000000,0)
+			rj.FireRocket:FireServer(targetPosition,spawnPosition)
+		end
+	end
+	if k == "n" then
+		for i = 1, 10 do
+			local angle = math.rad((360 / 10) * i)
+			local x = game.Players.LocalPlayer.Character.Head.Position.X + (10 * math.cos(angle))
+			local z = game.Players.LocalPlayer.Character.Head.Position.Z + (10 * math.sin(angle))
+			rj.FireRocket:FireServer(Vector3.new(0,-1000000,0),Vector3.new(x, game.Players.LocalPlayer.Character.Head.Position.Y + 100, z))
+		end
+	end
+	if k == "m" then
+		gh = 10
+		hg = 10
+		for k = 1, 10 do
+			wait(0.1)
+			gh = gh + 1
+			hg = hg + 5
+			for i = 1, gh do
+				local angle = math.rad((360 / gh) * i)
+				local x = game.Players.LocalPlayer.Character.Head.Position.X + (hg * math.cos(angle))
+				local z = game.Players.LocalPlayer.Character.Head.Position.Z + (hg * math.sin(angle))
+				local part = Instance.new("Part")
+				part.Position = Vector3.new(x, game.Players.LocalPlayer.Character.Head.Position.Y, z)
+				rj.FireRocket:FireServer(Vector3.new(0,-1000000,0),Vector3.new(x, game.Players.LocalPlayer.Character.Head.Position.Y + 100, z))
+			end
+		end
+	end
+	if k == "f" then
+		radius = 10
+		height = 5
+		currentAngle = 0
+		angleIncrement = math.rad(10)
+		for i = 1, 360 do
+			wait(0.01)
+			local x = game.Players.LocalPlayer.Character.Head.Position.X + (radius * math.cos(currentAngle))
+			local z = game.Players.LocalPlayer.Character.Head.Position.Z + (radius * math.sin(currentAngle))
+			rj.FireRocket:FireServer(Vector3.new(0,-1000000,0),Vector3.new(x, game.Players.LocalPlayer.Character.Head.Position.Y + 10, z))
+			print(Vector3.new(x, game.Players.LocalPlayer.Character.Head.Position.Y + 30, z))
+			currentAngle = currentAngle + angleIncrement
+			radius = radius + 1
+		end
+	end
+	if k == "h" then
+		local radius = 10
+		local waveHeight = 3
+		local waveSpeed = 10
+		local function createrocket(angle)
+			rj.FireRocket:FireServer(Vector3.new(0,-1000000,0),game.Players.LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(math.cos(angle) * radius, waveHeight * math.sin(angle * waveSpeed), math.sin(angle) * radius))
+			--part.Position = part.Position + Vector3.new(math.cos(angle) * radius, waveHeight * math.sin(angle * waveSpeed), math.sin(angle) * radius)
+		end
+		for angle = 0, math.pi * 2, 0.1 do
+			createrocket(angle)
+			radius = radius + 1
+			wait(0.1)
+		end
+	end
+	if k == "j" then
+		local part = game.Players.LocalPlayer.Character.HumanoidRootPart
+		local partcf = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector
+		local startPosition = part.Position + part.CFrame.LookVector * 6
+		for i = 1, 100 do
+			wait(0.01)
+			rj.FireRocket:FireServer(Vector3.new(0,-100000000,0),startPosition + partcf * (i - 1) * 5)
+		end
+	end
+	if k == "r" then
+		lookAtPlayers(game.Players.LocalPlayer:GetMouse().Hit.Position)
+	end
+	if k == "t" then
+		if game.Workspace:FindFirstChild("SuperSecretAssets") then
+			for i,v in pairs(game.Workspace:FindFirstChild("SuperSecretAssets"):GetDescendants()) do
+				if v.Name ~= "Blart" and v:IsA("BasePart") then
+					v:Destroy()
+				end
+			end
+		end
+	end
+	if k == "y" then
+		for i = 1, 10 do
+			local angle = math.rad((360 / 10) * i)
+			local x = game.Players.LocalPlayer:GetMouse().Hit.Position.X + (30 * math.cos(angle))
+			local z = game.Players.LocalPlayer:GetMouse().Hit.Position.Z + (30 * math.sin(angle))
+			coroutine.wrap(function()
+				lookAtPlayers(Vector3.new(x, game.Players.LocalPlayer:GetMouse().Hit.Position.Y, z))
+			end)()
+		end
+	end
+	if k == "u" then --FINISHER
+		local bp = Instance.new("BodyPosition",character.HumanoidRootPart)
+		bp.Position = character.HumanoidRootPart.Position
+		bp.P = 30000
+		game:GetService("Debris"):AddItem(bp,10)
+		character:FindFirstChildOfClass("Humanoid").Jump = true
+		for i = 1,100 do
+			wait(0.00001)
+			bp.Position = bp.Position + Vector3.new(0,1,0)
+			character:FindFirstChildOfClass("Humanoid").Jump = true
+		end
+		coroutine.wrap(function()
+			local radius = 1
+			local height = 5
+			local currentAngle = 0
+			local angleIncrement = math.rad(10)
+			for i = 1, 720 do
+				wait(0.0001)
+				local x = game.Players.LocalPlayer.Character.Head.Position.X + (radius * math.cos(currentAngle))
+				local z = game.Players.LocalPlayer.Character.Head.Position.Z + (radius * math.sin(currentAngle))
+				rj.FireRocket:FireServer(Vector3.new(0,-1000000,0),Vector3.new(x, game.Players.LocalPlayer.Character.Head.Position.Y + 10, z))
+				print(Vector3.new(x, game.Players.LocalPlayer.Character.Head.Position.Y + 30, z))
+				currentAngle = currentAngle + angleIncrement
+				radius = radius + 1
+			end
+		end)(1)
+		coroutine.wrap(function()
+			gh = 5
+			hg = 5
+			for k = 1, 20 do
+				wait(0.1)
+				gh = gh + 1
+				hg = hg + 5
+				for i = 1, gh do
+					local angle = math.rad((360 / gh) * i)
+					local x = game.Players.LocalPlayer.Character.Head.Position.X + (hg * math.cos(angle))
+					local z = game.Players.LocalPlayer.Character.Head.Position.Z + (hg * math.sin(angle))
+					local part = Instance.new("Part")
+					part.Position = Vector3.new(x, game.Players.LocalPlayer.Character.Head.Position.Y, z)
+					rj.FireRocket:FireServer(Vector3.new(0,-1000000,0),Vector3.new(x, game.Players.LocalPlayer.Character.Head.Position.Y + 100, z))
+				end
+			end
+		end)(1)
+		coroutine.wrap(function()
+			gh = 1
+			hg = 1
+			for k = 1, 25 do
+				wait(0.1)
+				gh = gh + 1
+				hg = hg + 5
+				for i = 1, gh do
+					local angle = math.rad((360 / gh) * i)
+					local x = game.Players.LocalPlayer.Character.Head.Position.X + (hg * math.cos(angle))
+					local z = game.Players.LocalPlayer.Character.Head.Position.Z + (hg * math.sin(angle))
+					local part = Instance.new("Part")
+					part.Position = Vector3.new(x, game.Players.LocalPlayer.Character.Head.Position.Y, z)
+					rj.FireRocket:FireServer(Vector3.new(0,-1000000,0),Vector3.new(x, game.Players.LocalPlayer.Character.Head.Position.Y + 100, z))
+				end
+			end
+		end)(1)
+		coroutine.wrap(function()
+			for i = 1,200 do
+				wait(0.001)
+				rj.FireRocket:FireServer(character.Head.Position+Vector3.new(math.random(-360, 360), math.random(-360, 360), math.random(-360, 360)),character.Head.Position + Vector3.new(0,10,0))
+			end
+		end)(1)
+		coroutine.wrap(function()
+			for i = 1,200 do
+				wait(0.001)
+				rj.FireRocket:FireServer(character.Head.Position+Vector3.new(math.random(-360, 360), math.random(-360, 360), math.random(-360, 360)),character.Head.Position + Vector3.new(0,10,0))
+			end
+		end)(1)
+		coroutine.wrap(function()
+			for i = 1,200 do
+				wait(0.001)
+				rj.FireRocket:FireServer(character.Head.Position+Vector3.new(math.random(-360, 360), math.random(-360, 360), math.random(-360, 360)),character.Head.Position + Vector3.new(0,10,0))
+			end
+		end)(1)
+	end
+	if k == "k" then
+		local party = Instance.new("Part",workspace)
+		game:GetService("Debris"):AddItem(party,60)
+		party.Massless = true
+		party.Shape = Enum.PartType.Ball
+		party.BrickColor = BrickColor.new("Really black")
+		party.Material = Enum.Material.SmoothPlastic
+		local bv = Instance.new("BodyVelocity")
+		bv.maxForce = Vector3.new(1e9, 1e9, 1e9)
+		bv.velocity = game.Players.LocalPlayer:GetMouse().Hit.LookVector*40
+		bv.Parent = party
+		party.Position = player.Character.HumanoidRootPart.Position
+		party.Orientation = player.Character.HumanoidRootPart.Orientation
+		party.CanCollide = false
+		party.Size = Vector3.new(10,10,10)
+		bv.Parent = party
+		for i = 1,10 do
+			wait(1)
+			for r = 1,10 do
+				rj.FireRocket:FireServer(party.Position+Vector3.new(math.random(-360, 360), math.random(-360, 360), math.random(-360, 360)),party.Position)
+			end		
+		end
+		party:Destroy()
+	end
+	if k == "l" then
+		local party = Instance.new("Part",workspace)
+		party.Massless = true
+		party.Shape = Enum.PartType.Ball
+		party.BrickColor = BrickColor.new("Really black")
+		party.Material = Enum.Material.SmoothPlastic
+		local bv = Instance.new("BodyVelocity")
+		bv.maxForce = Vector3.new(1e9, 1e9, 1e9)
+		bv.velocity = game.Players.LocalPlayer:GetMouse().Hit.LookVector*40
+		bv.Parent = party
+		party.Position = player.Character.HumanoidRootPart.Position
+		party.Orientation = game.Players.LocalPlayer:GetMouse().Hit.LookVector
+		party.CanCollide = false
+		party.Size = Vector3.new(10,10,10)
+		bv.Parent = party
+		local rotation = 0
+		local rotation2 = 0
+		local bulletgos = Instance.new("Model",character)
+		local bulletgos2 = Instance.new("Model",character)
+		for z = 0, 24 do
+			wait()
+			rotation = rotation + 25
+			rotation2 = rotation2 - 25
+			local lb = Instance.new("Part")
+			lb.Parent = bulletgos
+			lb.Material = "Neon"
+			lb.Color = BrickColor.new("Dark indigo").Color
+			lb.CanCollide = false
+			lb.Anchored = true
+			lb.Transparency = 0
+			lb.Size = Vector3.new(2,2,2)
+			local thing = Instance.new("SpecialMesh",lb)
+			thing.MeshType = "Sphere"
+			thing.Scale = Vector3.new(0.5,0.5,1.5)
+			lb.CFrame = party.CFrame*CFrame.Angles(0,math.rad(rotation2),0)
+			local lb2 = Instance.new("Part")
+			lb2.Parent = bulletgos
+			lb2.Material = "Neon"
+			lb2.Color = lb.Color
+			lb2.CanCollide = false
+			lb2.Anchored = true
+			lb2.Transparency = 0
+			lb2.Size = Vector3.new(2,2,2)
+			lb2.CFrame = party.CFrame*CFrame.Angles(0,math.rad(rotation),0)
+			rj.FireRocket:FireServer(lb2.Position + (lb2.CFrame.LookVector * 2),lb2.Position)
+			rj.FireRocket:FireServer(lb.Position + (lb.CFrame.LookVector * 2),lb.Position)
+			local thing2 = Instance.new("SpecialMesh",lb2)
+			thing2.MeshType = "Sphere"
+			thing2.Scale = Vector3.new(0.5,0.5,1.5)
+			local lb3 = Instance.new("Part")
+			lb3.Parent = bulletgos2
+			lb3.Material = "Neon"
+			lb3.Color = BrickColor.new("Dark indigo").Color
+			lb3.CanCollide = false
+			lb3.Anchored = true
+			lb3.Transparency = 0
+			lb3.Size = Vector3.new(2,2,2)
+			local thing3 = Instance.new("SpecialMesh",lb3)
+			thing3.MeshType = "Sphere"
+			thing3.Scale = Vector3.new(0.5,0.5,1.5)
+			lb3.CFrame = party.CFrame*CFrame.Angles(0,math.rad(rotation2),0)
+			rj.FireRocket:FireServer(lb2.Position + (lb3.CFrame.LookVector * 2),lb3.Position)
+			local lb4 = Instance.new("Part")
+			lb4.Parent = bulletgos2
+			lb4.Material = "Neon"
+			lb4.Color = lb3.Color
+			lb4.CanCollide = false
+			lb4.Anchored = true
+			lb4.Transparency = 0
+			lb4.Size = Vector3.new(2,2,2)
+			lb4.CFrame = party.CFrame*CFrame.Angles(0,math.rad(rotation),0)
+			local thing4 = Instance.new("SpecialMesh",lb4)
+			thing4.MeshType = "Sphere"
+			thing4.Scale = Vector3.new(0.5,0.5,1.5)
+			rj.FireRocket:FireServer(lb3.Position + (lb4.CFrame.LookVector * 2),lb4.Position)
+			lb:Destroy()
+			lb2:Destroy()
+			lb3:Destroy()
+			lb4:Destroy()
+		end
+		game:GetService("Debris"):AddItem(party,5)
+	end
+	if k == "p" then
+		if page == 1 then
+			page = 2
+			local msg = Instance.new("Hint",workspace)
+			msg.Text = "Page 2"
+			game:GetService("Debris"):AddItem(msg,1)
+		elseif page == 2 then
+			page = 1
+			local msg = Instance.new("Hint",workspace)
+			msg.Text = "Page 1"
+			game:GetService("Debris"):AddItem(msg,1)
+		end
+	end
+	if k == "g" then
+		print("yo")
+		if enabled == false then
+			enabled = true
+		elseif enabled == true then
+			enabled = false
+		end
+		print(enabled)
+	end
+	while enabled do
+		wait(0.1)
+		local p = game.Players:GetPlayers()
+		for i = 2, #p do local v = p[i].Character
+			if v and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and v:FindFirstChild("HumanoidRootPart") and player:DistanceFromCharacter(v.HumanoidRootPart.Position) <= 30 then
+				for i,v in next, v:GetChildren() do
+					if v:IsA("BasePart") then
+						print(v)
+						rj.FireRocket:FireServer(Vector3.new(0,-1000000,0),v.Position)
+					end
+				end
+			end
+		end
+	end
+end)
+game.Players.LocalPlayer:GetMouse().KeyUp:Connect(function(k)
+	if k == "c" then
+		down = false
+	end
+	if k == "v" then
+		down2 = false
+	end
+end)
