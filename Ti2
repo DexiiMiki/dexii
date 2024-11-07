@@ -1,0 +1,361 @@
+--((Functions
+
+local function createuicorner(P)
+	local Uicorner = Instance.new("UICorner",P)
+end
+
+--))
+
+--((Varibles
+
+local Player = game.Players.LocalPlayer
+
+local Character = Player.Character or Player.CharacterAdded:Wait()
+
+local Root = Character:WaitForChild("HumanoidRootPart")
+
+local Hum = Character.Humanoid
+
+--))
+
+--((Creating Gui
+
+local Gui = Instance.new("ScreenGui", game.Players.LocalPlayer.PlayerGui)
+Gui.Name = "ploits"
+Gui.ResetOnSpawn = true
+
+
+local Background = Instance.new("Frame", Gui)
+Background.Name = "background"
+Background.Position = UDim2.fromScale(0.863, 0.378)
+Background.Size = UDim2.fromScale(0.164,0.321)
+Background.BackgroundColor3 = Color3.fromRGB(255, 169, 83)
+createuicorner(Background)
+
+local Teleports = Instance.new("ScrollingFrame", Gui)
+Teleports.Position = Background.Position
+Teleports.Size = Background.Size
+Teleports.BackgroundTransparency = 1
+Teleports.BorderSizePixel = 0
+Teleports.Name = "Teleports"
+Teleports.ZIndex=2
+
+local Label = Instance.new("TextLabel", Gui)
+Label.Size = UDim2.fromScale(0.135,0.084)
+Label.Position = UDim2.fromScale(0.864,0.296)
+Label.Font = Enum.Font.FredokaOne
+Label.TextStrokeTransparency = 0
+Label.BackgroundTransparency = 1
+Label.TextStrokeColor3 = Color3.fromRGB(255, 209, 42)
+Label.TextScaled = true
+Label.Text = "Teleports"
+
+local UiListLayout = Instance.new("UIGridLayout", Teleports)
+UiListLayout.CellPadding = UDim2.fromOffset(0,5)
+UiListLayout.CellSize = UDim2.fromOffset(100,50)
+UiListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+
+--))
+
+--{{ Teleport Buttons
+
+local SpawnTeleport = Instance.new("TextButton", Teleports)
+SpawnTeleport.Font = Enum.Font.FredokaOne
+SpawnTeleport.Text = "Spawn"
+SpawnTeleport.TextScaled = true
+SpawnTeleport.TextColor3 = Color3.fromRGB(221, 255, 47)
+SpawnTeleport.Name = "SpawnTeleport"
+createuicorner(SpawnTeleport)
+
+local LeftSpawnTeleport = Instance.new("TextButton", Teleports)
+LeftSpawnTeleport.Font = Enum.Font.FredokaOne
+LeftSpawnTeleport.Text = "Left Spawn Teleport"
+LeftSpawnTeleport.TextScaled = true
+LeftSpawnTeleport.TextColor3 = Color3.fromRGB(221, 255, 47)
+LeftSpawnTeleport.Name = "LeftSpawnTeleport"
+createuicorner(LeftSpawnTeleport)
+
+local RightSpawnTeleport = Instance.new("TextButton", Teleports)
+RightSpawnTeleport.Font = Enum.Font.FredokaOne
+RightSpawnTeleport.Text = "Right Spawn Teleport"
+RightSpawnTeleport.TextScaled = true
+RightSpawnTeleport.TextColor3 = Color3.fromRGB(221, 255, 47)
+RightSpawnTeleport.Name = "RightSpawnTeleport"
+createuicorner(RightSpawnTeleport)
+
+local SafeAreaTeleport = Instance.new("TextButton", Teleports)
+SafeAreaTeleport.Font = Enum.Font.FredokaOne
+SafeAreaTeleport.Text = "Safe Area Teleport"
+SafeAreaTeleport.TextScaled = true
+SafeAreaTeleport.TextColor3 = Color3.fromRGB(221, 255, 47)
+SafeAreaTeleport.Name = "SafeAreaTeleport"
+createuicorner(SafeAreaTeleport)
+
+local Commands = Instance.new("ScrollingFrame", Gui)
+Commands.BackgroundTransparency=1
+Commands.BorderSizePixel=0
+Commands.Position = UDim2.fromScale(0,0.378)
+Commands.Size = UDim2.fromScale(0.12,0.36)
+Commands.ZIndex=2
+Commands.Name = "Commands"
+local Uigridlayout2 = UiListLayout:Clone()
+Uigridlayout2.Parent = Commands
+
+local background2 = Background:Clone()
+background2.Position = Commands.Position
+background2.Size = Commands.Size
+background2.Parent=Gui
+
+local Label2 = Label:Clone()
+Label2.Text = "Commands"
+Label2.Parent = Gui
+Label2.Position = UDim2.fromScale(-0.001, 0.296)
+Label2.Size = UDim2.fromScale(0.12, 0.084)
+
+local Sit = Instance.new("TextButton", Commands)
+Sit.Font = Enum.Font.FredokaOne
+Sit.Text = "Sit"
+Sit.TextScaled = true
+Sit.TextColor3 = Color3.fromRGB(221, 255, 47)
+Sit.Name = "Sit"
+Sit.ZIndex=3
+createuicorner(Sit)
+
+local SpawnInvincibility = Instance.new("TextButton", Commands)
+SpawnInvincibility.Font = Enum.Font.FredokaOne
+SpawnInvincibility.Text = "Spawn Invincibility"
+SpawnInvincibility.TextScaled = true
+SpawnInvincibility.TextColor3 = Color3.fromRGB(221, 255, 47)
+SpawnInvincibility.Name = "SpawnInvincibility"
+SpawnInvincibility.ZIndex=3
+createuicorner(SpawnInvincibility)
+
+local ForceReset = Instance.new("TextButton", Commands)
+ForceReset.Font = Enum.Font.FredokaOne
+ForceReset.Text = "Force Reset"
+ForceReset.TextScaled = true
+ForceReset.TextColor3 = Color3.fromRGB(221, 255, 47)
+ForceReset.Name = "ForceReset"
+ForceReset.ZIndex=3
+createuicorner(ForceReset)
+
+local Xray = Instance.new("TextButton", Commands)
+Xray.Font = Enum.Font.FredokaOne
+Xray.Text = "Xray"
+Xray.TextScaled = true
+Xray.TextColor3 = Color3.fromRGB(221, 255, 47)
+Xray.Name = "Xray"
+Xray.ZIndex=3
+createuicorner(Xray)
+
+local Playerlist = Instance.new("ScrollingFrame", Gui)
+Playerlist.BackgroundTransparency=1
+Playerlist.BorderSizePixel=0
+Playerlist.Position = UDim2.fromScale(.144,.378)
+Playerlist.Size = UDim2.fromScale(.188,.36)
+Playerlist.ZIndex=2
+Playerlist.Name = "Playerlist"
+local UIGridLayout3 = Instance.new("UIGridLayout", Playerlist)
+UIGridLayout3.CellPadding = UDim2.fromOffset(0,5)
+UIGridLayout3.CellSize = UDim2.fromOffset(100,50)
+UIGridLayout3.HorizontalAlignment = Enum.HorizontalAlignment.Left
+UIGridLayout3.FillDirection = Enum.FillDirection.Vertical
+
+local background3 = Background:Clone()
+background3.Position = Playerlist.Position
+background3.Size = Playerlist.Size
+background3.Parent=Gui
+background3.BackgroundColor3 = Color3.fromRGB(255, 169, 235)
+
+local Label3 = Label:Clone()
+Label3.Text = "Playerlist"
+Label3.Parent = Gui
+Label3.Position = UDim2.fromScale(.143,.296)
+Label3.Size = UDim2.fromScale(.12,.084)
+Label3.TextColor3 = Color3.fromRGB(248, 167, 255)
+Label3.TextStrokeColor3 = Color3.fromRGB(227, 83, 255)
+Label3.TextStrokeTransparency = 0
+
+local Playerbutton = Sit:Clone()
+--Playerbutton.Parent = Playerlist
+Playerbutton.TextColor3 = Color3.fromRGB(181, 70, 203)
+Playerbutton.TextStrokeTransparency = 0
+Playerbutton.Parent=Gui
+Playerbutton.Visible=false
+
+local image = Instance.new("ImageLabel", Playerbutton)
+image.BorderSizePixel = 0
+image.BackgroundTransparency = 1
+image.Position = UDim2.fromScale(1,0.008)
+image.Size = UDim2.fromScale(0.6, .98)
+image.Name = "image"
+image.ZIndex = 2
+
+local function Removing(player)
+	Playerlist:FindFirstChild(player.Name):Destroy()
+end
+
+local function Added(player)
+	if player:IsA("Player") then
+		local pbutton = Playerbutton:Clone()
+		pbutton.Parent = Playerlist
+		pbutton.Visible = true
+		pbutton.Text = player.DisplayName.." (@"..player.Name..")"
+		pbutton.Name = player.Name
+		local UserId = player.UserId -- change it to the userID, does not have to be in-game.
+		local thumbType = Enum.ThumbnailType.AvatarThumbnail
+		local thumbSize = Enum.ThumbnailSize.Size420x420
+
+		local success,result = pcall(function()
+			return game.Players:GetUserThumbnailAsync(UserId,thumbType,thumbSize)
+		end)
+
+		if success then
+			pbutton.image.Image = result
+		end
+			
+		pbutton.MouseButton1Click:Connect(function()
+			Root.CFrame = player.Character:WaitForChild("HumanoidRootPart").CFrame
+		end)
+		
+		print("Added player "..player.Name)
+	end
+end
+
+game.Players.PlayerRemoving:Connect(Removing)
+game.Players.PlayerAdded:Connect(Added)
+
+for i, players in pairs(game.Players:GetChildren()) do
+	if players:IsA("Player") then
+		if players.Character then
+			local pbutton = Playerbutton:Clone()
+			pbutton.Parent = Playerlist
+			pbutton.Visible = true
+			pbutton.Text = players.DisplayName.." (@"..players.Name..")"
+			pbutton.Name = players.Name
+			local UserId = players.UserId -- change it to the userID, does not have to be in-game.
+			local thumbType = Enum.ThumbnailType.AvatarThumbnail
+			local thumbSize = Enum.ThumbnailSize.Size420x420
+
+			local success,result = pcall(function()
+				return game.Players:GetUserThumbnailAsync(UserId,thumbType,thumbSize)
+			end)
+
+			if success then
+				pbutton.image.Image = result
+			end
+			
+			pbutton.MouseButton1Click:Connect(function()
+				Root.CFrame = players.Character:WaitForChild("HumanoidRootPart").CFrame
+			end)
+			
+			print("Added player from pairs "..players.Name)
+		end
+	end
+end
+
+--[[local DanceButton = Sit:Clone()
+DanceButton.Parent = Gui
+DanceButton.Position = UDim2.fromScale(-0, 0.224)
+DanceButton.Size = UDim2.fromScale(0.188, 0.084)
+DanceButton.Text = "DANCE BUTTON (animation is server-cided, music is not)"--]]
+
+--}}
+
+--The Coding stuffs--((
+
+SpawnTeleport.MouseButton1Click:Connect(function()
+	Root.CFrame = CFrame.new(-874, 4, -62)
+end)
+
+RightSpawnTeleport.MouseButton1Click:Connect(function()
+	Root.CFrame = CFrame.new(-868, 4, 45)
+end)
+
+LeftSpawnTeleport.MouseButton1Click:Connect(function()
+	Root.CFrame = CFrame.new(-870, 4, -188)
+end)
+
+SafeAreaTeleport.MouseButton1Click:Connect(function()
+	Root.CFrame = CFrame.new(-748, -44, -144.5)
+end)
+
+SpawnInvincibility.MouseButton1Click:Connect(function()
+	Hum.HipHeight = 2
+	Character.Torso["Right Hip"]:Destroy()
+	Character.Torso["Left Hip"]:Destroy()
+end)
+
+Sit.MouseButton1Click:Connect(function()
+	Hum.Sit = true
+end)
+
+ForceReset.MouseButton1Click:Connect(function()
+	Character:BreakJoints()
+end)
+
+
+local connection
+
+local y = true
+Xray.MouseButton1Click:Connect(function()
+	if y == true then
+		y = false
+		
+		connection = game:GetService("RunService").RenderStepped:Connect(function()
+			for i, players in pairs(game.Players:GetChildren()) do
+				if players:IsA("Player") then
+					if players.Character then
+						if players.Character:FindFirstChildOfClass("Highlight") then
+							return
+						end
+						local Highlight = Instance.new("Highlight", players.Character)
+						Highlight.Adornee = players.Character
+						Highlight.FillTransparency = 1
+						Highlight.OutlineColor = Color3.fromRGB(255,0,0)
+					end
+				end
+			end
+		end)
+		
+	elseif y == false then
+		y = true
+		
+		connection:Disconnect()
+		
+		for i, players in pairs(game.Players:GetChildren()) do
+			if players:IsA("Player") then
+				if players.Character then
+					if players.Character:FindFirstChildOfClass("Highlight") then
+						players.Character:FindFirstChildOfClass("Highlight"):Destroy()
+					end
+				end
+			end
+		end
+		
+	end
+end)
+
+--))
+
+local Light = Label3
+local TweenService = (game:FindService("TweenService") or game:GetService("TweenService"))
+local LightFade = TweenInfo.new(1,Enum.EasingStyle.Linear,Enum.EasingDirection.In,0,false,.5)
+local ColorCycle = {}
+ColorCycle[#ColorCycle+1] = Color3.fromRGB(0,0,0)
+ColorCycle[#ColorCycle+1] = Color3.fromRGB(255,255,255)
+ColorCycle[#ColorCycle+1] = Color3.fromRGB(255,0,0)
+ColorCycle[#ColorCycle+1] = Color3.fromRGB(255,176,0)
+ColorCycle[#ColorCycle+1] = Color3.fromRGB(0,255,0)
+ColorCycle[#ColorCycle+1] = Color3.fromRGB(0,0,255)
+ColorCycle[#ColorCycle+1] = Color3.fromRGB(102, 51, 0)
+ColorCycle[#ColorCycle+1] = Color3.fromRGB(170,0,170)
+ColorCycle[#ColorCycle+1] = Color3.fromRGB(255, 85, 255)
+
+while Light do
+	for _,Colors in pairs(ColorCycle) do
+		local Tween = TweenService:Create(Light,LightFade,{TextColor3 = Colors})
+		Tween:Play()
+		Tween.Completed:Wait()
+	end
+end
