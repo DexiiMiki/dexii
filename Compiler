@@ -1,0 +1,77 @@
+local PlayerToGrabFrom = workspace:WaitForChild("Dino_loldino")
+local CharacterToGrabFrom = workspace:WaitForChild("Dummy")
+
+local compiledAssets = {}
+
+local MarketplaceService = game:GetService("MarketplaceService")
+
+local settings = {
+	endTime = 120
+}
+
+local init = task.spawn(function()
+	while task.wait(0.5) do
+		if typeof(PlayerToGrabFrom)=="Instance" and PlayerToGrabFrom:IsA("Model") and typeof(CharacterToGrabFrom)=="Instance" and CharacterToGrabFrom:IsA("Model") then
+			local pgfHum = PlayerToGrabFrom:FindFirstChildOfClass("Humanoid")
+			local cgfHum = PlayerToGrabFrom:FindFirstChildOfClass("Humanoid")
+			if pgfHum and cgfHum then
+				local Animator1 = pgfHum:FindFirstChildOfClass("Animator")
+				local Animator2 = cgfHum:FindFirstChildOfClass("Animator")
+				if Animator1 and Animator2 then
+					for index, key: AnimationTrack in Animator1:GetPlayingAnimationTracks() do
+						if key then
+							local num = string.split(key.Animation.AnimationId, "rbxassetid://")
+							if num[2] then
+								local info = MarketplaceService:GetProductInfo(tonumber(num[2]))
+								if info and info.Creator.Name~="Roblox" then
+									local outputresult = "(ANIMATION)\n"..key.Name..":{\n".."Animationid: "..tonumber(num[2]).."\nAsset Name: "..info.Name.."\n}\n\n"
+									if not compiledAssets[outputresult] then
+										compiledAssets[outputresult] = true
+										print(outputresult)
+									end
+								end
+							end
+						end
+					end
+				end
+
+				for i, sound: Sound in CharacterToGrabFrom:GetDescendants() do
+					if sound and sound:IsA("Sound") then
+						local num = string.split(sound.SoundId, "rbxassetid://")
+						if num[2] then
+							local info = MarketplaceService:GetProductInfo(tonumber(num[2]))
+							if info and info.Creator.Name~="Roblox" then
+								local outputresult = "(SOUND)\n"..sound.Name..":{\n".."SoundId: "..tonumber(num[2]).."\nAsset Name: "..info.Name.."\n}\n\n"
+								if not compiledAssets[outputresult] then
+									compiledAssets[outputresult] = true
+									print(outputresult)
+								end
+							end
+						end
+					end
+				end
+				for i, sound: Sound in PlayerToGrabFrom:GetDescendants() do
+					if sound and sound:IsA("Sound") then
+						local num = string.split(sound.SoundId, "rbxassetid://")
+						if num[2] then
+							local info = MarketplaceService:GetProductInfo(tonumber(num[2]))
+							if info and info.Creator.Name~="Roblox" then
+								local outputresult = "(SOUND)\n"..sound.Name..":{\n".."SoundId: "..tonumber(num[2]).."\nAsset Name: "..info.Name.."\n}\n\n"
+								if not compiledAssets[outputresult] then
+									compiledAssets[outputresult] = true
+									print(outputresult)
+								end
+							end
+						end
+					end
+				end
+
+			end
+		end
+	end
+end)
+
+task.delay(settings.endTime, function()
+	print("\n\n\n\n\n\nFINISHED")
+	task.cancel(init)
+end)
