@@ -33,6 +33,22 @@ local init = task.spawn(function()
 							end
 						end
 					end
+					
+					for index, key: AnimationTrack in Animator2:GetPlayingAnimationTracks() do
+						if key then
+							local num = string.split(key.Animation.AnimationId, "rbxassetid://")
+							if num[2] then
+								local info = MarketplaceService:GetProductInfo(tonumber(num[2]))
+								if info and info.Creator.Name~="Roblox" then
+									local outputresult = "(ANIMATION)\n"..key.Name..":{\n".."Animationid: "..tonumber(num[2]).."\nAsset Name: "..info.Name.."\n}\n\n"
+									if not compiledAssets[outputresult] then
+										compiledAssets[outputresult] = true
+										print(outputresult)
+									end
+								end
+							end
+						end
+					end
 				end
 
 				for i, sound: Sound in CharacterToGrabFrom:GetDescendants() do
