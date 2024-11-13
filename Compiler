@@ -13,7 +13,7 @@ local init = task.spawn(function()
 	while task.wait(0.5) do
 		if typeof(PlayerToGrabFrom)=="Instance" and PlayerToGrabFrom:IsA("Model") and typeof(CharacterToGrabFrom)=="Instance" and CharacterToGrabFrom:IsA("Model") then
 			local pgfHum = PlayerToGrabFrom:FindFirstChildOfClass("Humanoid")
-			local cgfHum = PlayerToGrabFrom:FindFirstChildOfClass("Humanoid")
+			local cgfHum = CharacterToGrabFrom:FindFirstChildOfClass("Humanoid")
 			if pgfHum and cgfHum then
 				local Animator1 = pgfHum:FindFirstChildOfClass("Animator")
 				local Animator2 = cgfHum:FindFirstChildOfClass("Animator")
