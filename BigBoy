@@ -1,0 +1,25 @@
+local Player: Player = game.Players:FindFirstChild('BigFartingButterBoy')
+
+for i=1,100 do
+	Player.Character:FindFirstChildOfClass('Tool'):Activate()
+end
+
+local Player: Player = game.Players:FindFirstChild('BigFartingButterBoy')
+
+for _, v in Player.Backpack:GetChildren() do
+	if v:IsA('Tool') then
+		v.Parent = Player.Character
+	end
+end
+
+for _, v in workspace:GetDescendants() do
+	if v:IsA('ClickDetector') then
+		fireclickdetector(v)
+	end
+end
+
+for _, v in Player.Backpack:GetChildren() do
+	if v:IsA('Tool') then
+		v.Parent = Player.Character
+	end
+end
