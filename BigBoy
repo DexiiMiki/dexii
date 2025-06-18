@@ -1,10 +1,10 @@
-local Player: Player = game.Players:FindFirstChild('BigFartingButterBoy')
+local Player: Player = game.Players:FindFirstChild('BigFartingButterBoy2')
 
 for i=1,100 do
 	Player.Character:FindFirstChildOfClass('Tool'):Activate()
 end
 
-local Player: Player = game.Players:FindFirstChild('BigFartingButterBoy')
+local Player: Player = game.Players:FindFirstChild('BigFartingButterBoy2')
 
 for _, v in Player.Backpack:GetChildren() do
 	if v:IsA('Tool') then
